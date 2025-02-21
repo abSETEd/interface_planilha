@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remover Nomes Repetidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #3b6e8e;
+            font-size: 24px;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+        }
+        button {
+            background-color: #8aacc8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:disabled {
+            background-color: #c1c1c1;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        .download-btn {
+            background-color: #3b6e8e;
+            margin-top: 20px;
+        }
+        .file-input {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Remover Nomes Repetidos</h1>
+
+    <button id="uploadButton">Cole a Planilha Aqui</button>
+
+    <div class="file-input">
+        <input type="file" id="fileInput" accept=".xlsx, .xls, .ods" style="display:none">
+    </div>
+
+    <div class="status" id="statusLabel">Aguardando...</div>
+
+    <input type="text" id="fileNameInput" placeholder="Qual o nome do arquivo?" style="display:none">
+
+    <!-- Novo botão Enviar para o nome do arquivo -->
+    <button id="sendFileNameButton" style="display:none;">Enviar</button>
+
+    <button id="processButton" style="display:none;">Carregar Arquivo</button>
+
+    <button id="downloadButton" class="download-btn" style="display:none;" onclick="downloadFile()">Baixar Arquivo</button>
+</div>
+
+<script>
+    // Referências aos elementos HTML
+    const uploadButton = document.getElementById('uploadButton');
+    const fileInput = document.getElementById('fileInput');
+    const statusLabel = document.getElementById('statusLabel');
+    const processButton = document.getElementById('processButton');
+    const fileNameInput = document.getElementById('fileNameInput');
+    const sendFileNameButton = document.getElementById('sendFileNameButton');
+    const downloadButton = document.getElementById('downloadButton');
+
+    // Função para simular o upload e processamento
+    uploadButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            statusLabel.textContent = 'Lendo arquivo...';
+            fileNameInput.style.display = 'block';
+            sendFileNameButton.style.display = 'inline-block'; // Exibir o botão de enviar nome
+        }
+    });
+
+    // Ao clicar no botão "Enviar", armazena o nome do arquivo
+    sendFileNameButton.addEventListener('click', () => {
+        const fileName = fileNameInput.value.trim();
+        if (fileName) {
+            statusLabel.textContent = 'Separando planilha...';
+            fileNameInput.style.display = 'none';
+            sendFileNameButton.style.display = 'none';
+            processButton.style.display = 'inline-block'; // Exibir botão "Carregar Arquivo"
+        } else {
+            alert('Por favor, insira o nome do arquivo.');
+        }
+    });
+
+    processButton.addEventListener('click', () => {
+        statusLabel.textContent = 'Processando...';
+        processButton.disabled = true;
+        setTimeout(() => {
+            statusLabel.textContent = 'Aqui está a sua planilha!';
+            processButton.disabled = false;
+            downloadButton.style.display = 'inline-block'; // Mostrar botão de download
+        }, 3000); // Simulando o tempo de processamento (3 segundos)
+    });
+
+    function downloadFile() {
+        // Para fins de exemplo, vamos simular o download do arquivo gerado
+        const fileContent = "Nome, CNPJ, Telefone\nEmpresa A, 12.345.678/0001-99, (11) 1234-5678";
+        const blob = new Blob([fileContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'planilha_filtrada.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>
